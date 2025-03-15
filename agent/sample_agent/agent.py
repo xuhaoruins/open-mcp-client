@@ -65,7 +65,13 @@ async def chat_node(state: AgentState, config: RunnableConfig) -> Command[Litera
         mcp_tools = mcp_client.get_tools()
         
         # Create the react agent
-        model = ChatOpenAI(model="gpt-4o")
+        model = ChatOpenAI(
+            model="gpt-4",
+            azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
+            azure_deployment=os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME"),
+            openai_api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+            openai_api_version="2024-02-15-preview"
+        )
         react_agent = create_react_agent(model, mcp_tools)
         
         # Prepare messages for the react agent
