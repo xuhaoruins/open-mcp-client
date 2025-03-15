@@ -12,7 +12,13 @@ from langgraph.types import Command
 from copilotkit import CopilotKitState
 from langchain_mcp_adapters.client import MultiServerMCPClient
 from langgraph.prebuilt import create_react_agent
+
 import os
+
+# Define GitHub model configuration
+GITHUB_TOKEN = os.environ["GITHUB_TOKEN"]
+GITHUB_ENDPOINT = "https://models.inference.ai.azure.com"
+GITHUB_MODEL_NAME = os.environ["GITHUB_MODEL_NAME"]
 
 # Define the connection type structures
 class StdioConnection(TypedDict):
@@ -65,7 +71,11 @@ async def chat_node(state: AgentState, config: RunnableConfig) -> Command[Litera
         mcp_tools = mcp_client.get_tools()
         
         # Create the react agent
-        model = ChatOpenAI(model="gpt-4o")
+        model = ChatOpenAI(
+            base_url=GITHUB_ENDPOINT,
+            api_key=GITHUB_TOKEN,
+            model=GITHUB_MODEL_NAME)
+
         react_agent = create_react_agent(model, mcp_tools)
         
         # Prepare messages for the react agent
