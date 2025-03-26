@@ -67,6 +67,7 @@ async def chat_node(state: AgentState, config: RunnableConfig) -> Command[Litera
     
     # Set up the MCP client and tools using the configuration from state
     async with MultiServerMCPClient(mcp_config) as mcp_client:
+
         # Get the tools
         mcp_tools = mcp_client.get_tools()
         
